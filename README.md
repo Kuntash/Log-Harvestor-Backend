@@ -1,73 +1,56 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+# Log Harvestor Backend
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## Deployment details
 
-## Description
+The backend is live on [Base route](https://log-harvestor-backend-production.up.railway.app/)
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Two API endpoints has been created
 
-## Installation
+- `/log POST` : For log ingestion. The payload is as follows:
 
-```bash
-$ npm install
+```js
+{
+  "userId: "EXAMPLE_USER_ID",
+  "level": "error",
+  "message": "Failed to connect to DB",
+  "resourceId": "server-1234",
+  "timestamp": "2023-09-15T08:00:00Z",
+  "traceId": "abc-xyz-123",
+  "spanId": "span-456",
+  "commit": "5e5342f",
+  "metadata": {
+      "parentResourceId": "server-0987"
+  }
+}
 ```
 
-## Running the app
+- `/log GET` : For fetching logs with variety of filters using url params.
 
-```bash
-# development
-$ npm run start
+**URL PARAM KEYS**
 
-# watch mode
-$ npm run start:dev
+ - level
+ - message
+ - messageExactMatch: ( messageExactMatch=true , by default we search the message using regex, only when this key is also sent do we search for exact match. )
+ - resourceId
+ - timestamp: ( for exact time )
+ - min_timestamp: ( for min timestamp range )
+ - max_timestamp: ( for max timestamp range )
+ - traceId
+ - spanId
+ - commit
+ - metadata_parentResourceId
 
-# production mode
-$ npm run start:prod
-```
 
-## Test
+### Getting userId
 
-```bash
-# unit tests
-$ npm run test
+Before making any request, visit [Frontend](https://log-harvestor-frontend.vercel.app/) create your acccount on Clerk's SDK, you will then be directed to the page. Click on the copy user Id button.
 
-# e2e tests
-$ npm run test:e2e
+### Features implemented
 
-# test coverage
-$ npm run test:cov
-```
+- query with single filter.
+- Allow combining multiple filters.
+- Regular exp for search in message property.
+- Date range filter for timestamp.
+- userId based query interface
 
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
