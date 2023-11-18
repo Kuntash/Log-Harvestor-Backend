@@ -69,9 +69,9 @@ export class LogService {
     if (queryParams?.timestamp)
       filters.timestamp = new Date(queryParams?.timestamp);
 
-    if (queryParams?.['metadata.parentResourceId']) {
+    if (queryParams?.['metadata_parentResourceId']) {
       filters['metadata.parentResourceId'] =
-        queryParams?.['metadata.parentResourceId'];
+        queryParams?.['metadata_parentResourceId'];
     }
 
     if (queryParams?.message) {
@@ -96,7 +96,10 @@ export class LogService {
     }
 
     try {
-      const filteredDocuments = await this.logModel.find(filters);
+      const filteredDocuments = await this.logModel.find(filters, {
+        userId: 0,
+        __v: 0,
+      });
       return filteredDocuments;
     } catch (error) {
       Logger.log(error);
